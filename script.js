@@ -1,4 +1,6 @@
 async function checkDNCStatus() {
+    console.log("Check DNC Status function triggered");
+
     const phoneNumber = document.getElementById("phoneNumber").value.trim();
     if (!phoneNumber) {
         alert("Please enter a phone number");
@@ -18,7 +20,6 @@ async function checkDNCStatus() {
         // Log the data to check the structure
         console.log(data);
 
-        // Now we check if the data exists and update accordingly
         const results = {
             phone: phoneNumber,
             state: data.state || "Not Found",
@@ -32,15 +33,4 @@ async function checkDNCStatus() {
     } catch (error) {
         alert("Error fetching data: " + error.message);
     }
-}
-
-function displayResults(data) {
-    document.getElementById("phone").innerText = data.phone;
-    document.getElementById("state").innerText = data.state;
-    document.getElementById("dncNational").innerText = data.dncNational;
-    document.getElementById("dncState").innerText = data.dncState;
-    document.getElementById("litigator").innerText = data.litigator;
-    document.getElementById("blacklist").innerText = data.blacklist;
-
-    document.getElementById("result").style.display = "block";
 }

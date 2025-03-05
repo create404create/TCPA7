@@ -4,26 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNC Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap; /* To keep the JSON formatting */
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Check DNC Status</h1>
-    <input type="text" id="phoneNumber" placeholder="Enter Phone Number" />
-    <button onclick="checkDNCStatus()">Check Status</button>
+
+    <h1>DNC Status Lookup</h1>
+
+    <div style="text-align:center;">
+        <input type="text" id="phoneNumber" placeholder="Enter Phone Number" />
+        <button onclick="checkDNCStatus()">Check Status</button>
+    </div>
 
     <div id="result"></div>
 
     <script>
         async function checkDNCStatus() {
             const phoneNumber = document.getElementById("phoneNumber").value.trim();
+
             if (!phoneNumber) {
-                alert("Please enter a phone number");
+                alert("Please enter a phone number.");
                 return;
             }
 
-            // Using a CORS proxy to bypass CORS issues
+            // API URL with proxy for CORS issues
             const apiUrl = `https://cors-anywhere.herokuapp.com/https://tcpa.api.uspeoplesearch.net/tcpa/v1?x=${phoneNumber}`;
 
             try {
+                // Fetch the API response
                 const response = await fetch(apiUrl, {
                     method: "GET",
                     headers: {
@@ -32,19 +69,21 @@
                     }
                 });
 
-                // Check if the API returned a valid response
                 if (!response.ok) {
                     throw new Error("API error or invalid response.");
                 }
 
+                // Convert the response to JSON
                 const data = await response.json();
 
-                // Display the raw API response as a simple string
-                document.getElementById("result").innerHTML = JSON.stringify(data, null, 2);
+                // Display the raw response in the result section
+                document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+
             } catch (error) {
                 alert("Error fetching data: " + error.message);
             }
         }
     </script>
+
 </body>
 </html>

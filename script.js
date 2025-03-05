@@ -15,7 +15,10 @@ async function checkDNCStatus() {
 
         const data = await response.json();
 
-        // Ensure required fields exist; otherwise, mark them as "Not Found"
+        // Log the data to check the structure
+        console.log(data);
+
+        // Now we check if the data exists and update accordingly
         const results = {
             phone: phoneNumber,
             state: data.state || "Not Found",

@@ -4,29 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNC Lookup</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #result {
-            display: none;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <h1>Check DNC Status</h1>
     <input type="text" id="phoneNumber" placeholder="Enter Phone Number" />
     <button onclick="checkDNCStatus()">Check Status</button>
 
-    <div id="result">
-        <p><strong>Phone:</strong> <span id="phone"></span></p>
-        <p><strong>State:</strong> <span id="state"></span></p>
-        <p><strong>DNC National:</strong> <span id="dncNational"></span></p>
-        <p><strong>DNC State:</strong> <span id="dncState"></span></p>
-        <p><strong>Litigator:</strong> <span id="litigator"></span></p>
-        <p><strong>Blacklist:</strong> <span id="blacklist"></span></p>
-    </div>
+    <div id="result"></div>
 
     <script>
         async function checkDNCStatus() {
@@ -36,7 +20,7 @@
                 return;
             }
 
-            // Using a CORS proxy
+            // Using a CORS proxy to bypass CORS issues
             const apiUrl = `https://cors-anywhere.herokuapp.com/https://tcpa.api.uspeoplesearch.net/tcpa/v1?x=${phoneNumber}`;
 
             try {
@@ -47,39 +31,19 @@
                         "Content-Type": "application/json"
                     }
                 });
+
+                // Check if the API returned a valid response
                 if (!response.ok) {
                     throw new Error("API error or invalid response.");
                 }
 
                 const data = await response.json();
 
-                // Log the data to check the structure
-                console.log(data);
-
-                const results = {
-                    phone: phoneNumber,
-                    state: data.state || "Not Found",
-                    dncNational: data.DNCNational !== undefined ? data.DNCNational : "Not Found",
-                    dncState: data.DNCState !== undefined ? data.DNCState : "Not Found",
-                    litigator: data.Litigator !== undefined ? data.Litigator : "Not Found",
-                    blacklist: data.Blacklist !== undefined ? data.Blacklist : "Not Found"
-                };
-
-                displayResults(results);
+                // Display the raw API response as a simple string
+                document.getElementById("result").innerHTML = JSON.stringify(data, null, 2);
             } catch (error) {
                 alert("Error fetching data: " + error.message);
             }
-        }
-
-        function displayResults(data) {
-            document.getElementById("phone").innerText = data.phone;
-            document.getElementById("state").innerText = data.state;
-            document.getElementById("dncNational").innerText = data.dncNational;
-            document.getElementById("dncState").innerText = data.dncState;
-            document.getElementById("litigator").innerText = data.litigator;
-            document.getElementById("blacklist").innerText = data.blacklist;
-
-            document.getElementById("result").style.display = "block";
         }
     </script>
 </body>
